@@ -13,7 +13,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -40,3 +39,21 @@ jobs:
       with:
         name: my-cool-app-on-${{ matrix.dotnet-version }}
         path: "/home/runner/work/DotNetTest/DotNetTest/bin/Release/net${{ matrix.dotnet-version }}/*"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: my-cool-app-on-6.0
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: student1-48159404
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./my-cool-app-on-6.0
+      

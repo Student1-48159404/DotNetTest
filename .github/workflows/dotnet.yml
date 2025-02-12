@@ -33,3 +33,8 @@ jobs:
       run: dotnet build --no-restore --configuration Release
     - name: Publish
       run: dotnet publish --configuration Release
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        name: my-cool-app-on-${{ matrix.dotnet-version }}
+        path: "DotNetTest/DotNetTest/bin/Release/net6.0/publish/"
